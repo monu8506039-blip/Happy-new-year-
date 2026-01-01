@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Happy New Year 🎆</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  height:100%;
+  background:#000;
+  overflow:hidden;
+  font-family: Arial, sans-serif;
+}
+#start{
+  position:absolute;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:white;
+}
+.arrow{
+  font-size:80px;
+  animation:up 1s infinite alternate;
+}
+@keyframes up{
+  from{transform:translateY(0);}
+  to{transform:translateY(-20px);}
+}
+#start p{
+  font-size:22px;
+  opacity:0.8;
+}
+canvas{
+  display:none;
+}
+#final{
+  display:none;
+  position:absolute;
+  width:100%;
+  height:100%;
+  color:white;
+  text-align:center;
+}
+#final h1{
+  margin-top:120px;
+  font-size:60px;
+  animation:zoom 2s infinite alternate;
+}
+@keyframes zoom{
+  from{transform:scale(1);}
+  to{transform:scale(1.1);}
+}
+#final p{
+  font-size:22px;
+  width:80%;
+  margin:auto;
+  line-height:1.6;
+}
+.buildings{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:120px;
+  background:linear-gradient(#111,#000);
+}
+</style>
+</head>
+
+<body>
+
+<div id="start">
+  <div class="arrow">⬆️</div>
+  <p>Swipe Up / Tap Arrow</p>
+</div>
+
+<canvas id="fireworks"></canvas>
+
+<div id="final">
+  <h1>🎆 HAPPY NEW YEAR 🎆</h1>
+  <p>
+    May this New Year bring happiness, success,  
+    love and endless smiles in your life.  
+    Wishing you a bright future and beautiful moments ✨💖
+  </p>
+  <div class="buildings"></div>
+</div>
+
+<script>
+const start=document.getElementById("start");
+const canvas=document.getElementById("fireworks");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+
+let particles=[];
+
+function firework(){
+  for(let i=0;i<80;i++){
+    particles.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height/2,
+      vx:(Math.random()-0.5)*4,
+      vy:(Math.random()-0.5)*4,
+      life:100
+    });
+  }
+}
+
+function animate(){
+  ctx.fillStyle="rgba(0,0,0,0.2)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  particles.forEach((p,i)=>{
+    ctx.fillStyle="hsl("+Math.random()*360+",100%,60%)";
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,2,0,Math.PI*2);
+    ctx.fill();
+    p.x+=p.vx;
+    p.y+=p.vy;
+    p.life--;
+    if(p.life<=0) particles.splice(i,1);
+  });
+  requestAnimationFrame(animate);
+}
+
+function startShow(){
+  start.style.display="none";
+  canvas.style.display="block";
+  firework();
+  animate();
+  setInterval(firework,800);
+  setTimeout(()=>{
+    canvas.style.display="none";
+    document.getElementById("final").style.display="block";
+  },5000);
+}
+
+start.addEventListener("click",startShow);
+</script>
+
+</body>
+</html>
